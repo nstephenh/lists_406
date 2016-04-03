@@ -1,3 +1,5 @@
+import java.util.Iterator;
+
 public class LList<E>
 {
     /**
@@ -19,7 +21,7 @@ public class LList<E>
     {
     }
     /**
-     * @param an index
+     * @param k is the index
      * @throws IndexOutOfBoundsException if a nonexistent index
      * is passed to this method
      * @return the item at index k  in this list.
@@ -70,7 +72,7 @@ public class LList<E>
      */
     public IList<E> subList(int startIndex, int endIndex) 
     {
-        return null
+        return null;
     }
     public Iterator<E> iterator()
     {
