@@ -2,14 +2,21 @@ import java.util.Iterator;
 
 public class LList<E>
 {
+
+    private Link<E> start;
+    public LList()
+    {
+        start = null;
+        //sz = 0;
+    }
     /**
      * @param newItem new item to be added to the end
-     * @return true
      * of the list.
      */
-    public boolean add(E newItem)
+    public void add(E newItem)
     {
-        return false;
+        Link<E> newStart = new Link<E>(newItem, start);
+        start = newStart;
     }
     /**
      * @param k The index at which the new item is
@@ -19,6 +26,7 @@ public class LList<E>
      */
     public void add(int k, E newItem)
     {
+        return;
     }
     /**
      * @param k is the index
@@ -77,5 +85,28 @@ public class LList<E>
     public Iterator<E> iterator()
     {
         return null;
+    }
+}
+//Link from LStack
+class Link<T>
+{
+    private T datum;
+    private Link<T> next;
+    public Link(T datum, Link<T> next)
+    {
+        this.datum = datum;
+        this.next = next;
+    }
+    public Link(T datum)
+    {
+        this(datum, null);
+    }
+    public T getDatum()
+    {
+        return datum;
+    }
+    public Link<T> getNext()
+    {
+        return next;
     }
 }
