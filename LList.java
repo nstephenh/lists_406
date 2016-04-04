@@ -1,6 +1,6 @@
 import java.util.Iterator;
 
-public class LList<E>
+public class LList<E> implements IList<E>
 {
 
     private Link<E> start;
@@ -85,6 +85,40 @@ public class LList<E>
     public Iterator<E> iterator()
     {
         return null;
+    }
+
+    public static void main(String[] args) {
+        final int TEST = 20;
+        IList<String> theStack = new LList<String>();
+        for (int k = 0; k < TEST; k++) {
+            theStack.add("" + k);
+            System.out.print(k + " ");
+        }
+        System.out.println(theStack.size() == TEST ? "PASS" : "FAIL");
+        System.out.println();
+        for (String s : theStack) {
+            System.out.print(s + " ");
+        }
+        System.out.println();
+
+        for (int k = 0; k < TEST; k++) {
+            System.out.print(theStack.get(k) + " ");
+        }
+        theStack.add(10, "dek");
+        theStack.add(11, "el");
+        theStack.set(12, "doe");
+        System.out.println();
+        for (int k = 0; k < theStack.size(); k++) {
+            System.out.print(theStack.get(k) + " ");
+        }
+        System.out.println();
+
+        IList<String> dozenalNames = theStack.subList(10, 12);
+        for (String s : dozenalNames) {
+            System.out.print(s + " ");
+        }
+        System.out.println();
+        System.out.println(theStack.contains("19"));
     }
 }
 //Link from LStack
