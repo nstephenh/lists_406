@@ -76,10 +76,11 @@ public class AList<E> implements IList<E>
     public boolean contains(Object o)
     {
         int i = 0;
-        while (i <= items.length){
+        while (i <= sz){
             if (items[i].equals(o)){
                 return true;
             }
+            i++;
         }
         return false;
     }
@@ -89,7 +90,7 @@ public class AList<E> implements IList<E>
      */
     public int size()
     {
-        return items.length;
+        return sz;
     }
     /**
      * This creates a new list containing all entries starting
@@ -106,15 +107,35 @@ public class AList<E> implements IList<E>
         int i = 0;
         while (i <= endIndex-startIndex){
             newList.add((E) items[i+startIndex]);
+            i++;
         }
         return newList;
     }
     public Iterator<E> iterator()
     {
-        return null;
+        return new Navigator<E>();
     }
 
     //Functions borrowed from AStack
+    class Navigator<T> implements Iterator<T>
+    {
+        private int loc;
+        public Navigator()
+        {
+            loc = -1;
+        }
+        public boolean hasNext()
+        {
+            return !(loc+2 > sz);
+
+        }
+        @SuppressWarnings("unchecked")
+        public T next()
+        {
+            loc++;                 //go to next
+            return (T)items[loc];  //grab next
+        }
+    }
 
     private int resizePolicy(int oldSize) {
         return oldSize < 1000? 2*oldSize: 3*oldSize/2;
@@ -140,23 +161,65 @@ public class AList<E> implements IList<E>
      */
     private void shiftArray(int shift, int pos){
         if (pos-shift < 0){ throw new IndexOutOfBoundsException();}
-        if (items.length + shift > capacity){
+        if (sz + shift > capacity){
             resizeArray();
         }
+        sz += shift;
         if (shift > 0){
-            int i = items.length;
-            while (i > pos) {
+            int i = sz-1;
+            while (i >= pos) {
                 // Shift values over starting at the back so you don't overwrite something
                 items[i + shift] = items[i];
+                i--;
             }
         }else{
             int i = pos;
             while (i < items.length) {
                 // Shift values over starting at pos so you don't overwrite something
                 items[i + shift] = items[i];
+                i++;
             }
         }
-        sz += shift;
+
         
+    }
+    public static void main(String[] args)
+    {
+        final int TEST  = 20;
+        IList<String> theStack = new AList<String>();
+        for(int k = 0; k < TEST; k++)
+        {
+            theStack.add("" + k);
+            System.out.print(k + " ");
+        }
+        System.out.println(theStack.size() == TEST? "PASS":"FAIL");
+        System.out.println();
+        for(String s: theStack)
+        {
+            System.out.print(s  + " ");
+        }
+        System.out.println();
+
+        for(int k = 0; k < TEST; k++)
+        {
+            System.out.print(theStack.get(k) + " ");
+        }
+        theStack.add(10, "dek");
+        theStack.add(11, "el");
+        theStack.set(12, "doe");
+        System.out.println();
+        for(int k = 0; k < theStack.size(); k++)
+        {
+            System.out.print(theStack.get(k) + " ");
+        }
+        System.out.println();
+
+        IList<String> dozenalNames = theStack.subList(10, 12);
+        for(String s: dozenalNames)
+        {
+            System.out.print(s  + " ");
+        }
+        System.out.println();
+        System.out.println(theStack.contains("19"));
     }
 }
