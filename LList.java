@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Iterator;
 
 public class LList<E> implements IList<E>
@@ -14,13 +15,24 @@ public class LList<E> implements IList<E>
      */
     public void add(E newItem)
     {
-        try {
-            start.getNext();
-        }catch(NullPointerException done){
-            start = new Link<E>(newItem, start);
+        System.out.println(size());
+        if (size()==0) {
+            start = new Link<>(newItem, null);
+            return;
         }
-        int k = size()+1;
-        add(k, newItem);
+        if (size()==1){
+            start.setNext(new Link<E>(newItem, null));
+            return;
+        }
+        if (size()==2){
+            start.getNext().setNext(new Link<E>(newItem, null));
+            return;
+        }
+        Link<E> useMe = start;
+        for(int i = 0; i < size()-2; i++){
+            useMe = useMe.getNext();
+        }
+        useMe.getNext().setNext(new Link<E>(newItem, null));
     }
     /**
      * @param k The index at which the new item is
@@ -30,32 +42,6 @@ public class LList<E> implements IList<E>
      */
     public void add(int k, E newItem)
     {
-        if (size() == 0){
-            start = new Link<E>(newItem, start);
-        }
-        Link<E> currentLink = start;
-        Link<E> newLink = null;
-        int j;
-        for(j = 0; j <= k; j++) {
-            try {
-                currentLink = currentLink.getNext();
-            }catch(NullPointerException done){
-                System.out.println(done);
-                newLink = new Link<E>(newItem, currentLink);
-                break;
-            }
-            if (j==k){
-                newLink = new Link<E>(newItem, currentLink);
-            }
-        }
-        currentLink = start;
-        for(int i = 0; i < j; i++) {
-            System.out.println(currentLink);
-            if (i==j-1){
-                currentLink.setNext(newLink);
-            }
-        }
-
 
     }
     /**
@@ -68,7 +54,7 @@ public class LList<E> implements IList<E>
     {
         Link<E> currentLink = start;
         for(int j = 0; j <= k; j++) {
-            System.out.print(currentLink);
+            //System.out.print(currentLink);
             try {
                 currentLink = currentLink.getNext();
             }catch(NullPointerException done){
@@ -138,15 +124,15 @@ public class LList<E> implements IList<E>
     public static void main(String[] args) {
         final int TEST = 20;
         IList<String> theStack = new LList<String>();
-        //System.out.println(theStack.size());
         for (int k = 0; k < TEST; k++) {
             theStack.add("" + k);
             System.out.print(k + " ");
         }
-        //System.out.println(theStack.size() == TEST ? "PASS" : "FAIL");
-        //for (int k = 0; k < TEST; k++) {
-            //System.out.print(theStack.get(k) + " ");
-        //}
+        /*System.out.println(theStack.size());
+        System.out.println(theStack.size() == TEST ? "PASS" : "FAIL");
+        for (int k = 0; k < 2; k++) {
+            System.out.print(theStack.get(k) + " ");
+        }*/
         /*System.out.println();
         for (String s : theStack) {
             System.out.print(s + " ");
