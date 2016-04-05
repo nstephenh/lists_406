@@ -7,7 +7,6 @@ public class LList<E> implements IList<E>
     public LList()
     {
         start = null;
-        //sz = 0;
     }
     /**
      * @param newItem new item to be added to the end
@@ -15,8 +14,13 @@ public class LList<E> implements IList<E>
      */
     public void add(E newItem)
     {
-        Link<E> newStart = new Link<E>(newItem, start);
-        start = newStart;
+        try {
+            start.getNext();
+        }catch(NullPointerException done){
+            start = new Link<E>(newItem, start);
+        }
+        int k = size()+1;
+        add(k, newItem);
     }
     /**
      * @param k The index at which the new item is
@@ -26,7 +30,33 @@ public class LList<E> implements IList<E>
      */
     public void add(int k, E newItem)
     {
-        return;
+        if (size() == 0){
+            start = new Link<E>(newItem, start);
+        }
+        Link<E> currentLink = start;
+        Link<E> newLink = null;
+        int j;
+        for(j = 0; j <= k; j++) {
+            try {
+                currentLink = currentLink.getNext();
+            }catch(NullPointerException done){
+                System.out.println(done);
+                newLink = new Link<E>(newItem, currentLink);
+                break;
+            }
+            if (j==k){
+                newLink = new Link<E>(newItem, currentLink);
+            }
+        }
+        currentLink = start;
+        for(int i = 0; i < j; i++) {
+            System.out.println(currentLink);
+            if (i==j-1){
+                currentLink.setNext(newLink);
+            }
+        }
+
+
     }
     /**
      * @param k is the index
@@ -36,6 +66,15 @@ public class LList<E> implements IList<E>
      */
     public E get(int k)
     {
+        Link<E> currentLink = start;
+        for(int j = 0; j <= k; j++) {
+            System.out.print(currentLink);
+            try {
+                currentLink = currentLink.getNext();
+            }catch(NullPointerException done){
+                return currentLink.getDatum();
+            }
+        }
         return null;
     }
     /**
@@ -67,7 +106,16 @@ public class LList<E> implements IList<E>
      */
     public int size()
     {
-        return -1;
+        int i = 0;
+        Link<E> currentLink = start;
+        while (true){
+            try {
+                currentLink = currentLink.getNext();
+            }catch(NullPointerException done){
+                return i;
+            }
+            i++;
+        }
     }
     /**
      * This creates a new list containing all entries starting
@@ -90,20 +138,22 @@ public class LList<E> implements IList<E>
     public static void main(String[] args) {
         final int TEST = 20;
         IList<String> theStack = new LList<String>();
+        //System.out.println(theStack.size());
         for (int k = 0; k < TEST; k++) {
             theStack.add("" + k);
             System.out.print(k + " ");
         }
-        System.out.println(theStack.size() == TEST ? "PASS" : "FAIL");
-        System.out.println();
+        //System.out.println(theStack.size() == TEST ? "PASS" : "FAIL");
+        //for (int k = 0; k < TEST; k++) {
+            //System.out.print(theStack.get(k) + " ");
+        //}
+        /*System.out.println();
         for (String s : theStack) {
             System.out.print(s + " ");
         }
         System.out.println();
 
-        for (int k = 0; k < TEST; k++) {
-            System.out.print(theStack.get(k) + " ");
-        }
+
         theStack.add(10, "dek");
         theStack.add(11, "el");
         theStack.set(12, "doe");
@@ -118,7 +168,7 @@ public class LList<E> implements IList<E>
             System.out.print(s + " ");
         }
         System.out.println();
-        System.out.println(theStack.contains("19"));
+        System.out.println(theStack.contains("19"));*/
     }
 }
 //Link from LStack
@@ -139,8 +189,14 @@ class Link<T>
     {
         return datum;
     }
+    public void setNext(Link<T> nexte){
+        next = nexte;
+    }
     public Link<T> getNext()
     {
         return next;
+    }
+    public String toSting(){
+        return datum.toString() + " , " + next.toString();
     }
 }
