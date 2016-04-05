@@ -18,7 +18,7 @@ public class LList<E> implements IList<E>
      */
     public void add(E newItem)
     {
-        System.out.println(size());
+        //System.out.println(size());
         if (size()==0) {
             start = new Link<>(newItem, null);
             return;
@@ -86,6 +86,13 @@ public class LList<E> implements IList<E>
      */
     public boolean contains(Object o)
     {
+        Link<E> currentLink = start;
+        for(int j = 0; j <= size(); j++) {
+            if (currentLink.getDatum().equals(o)){
+                return true;
+            }
+            currentLink = currentLink.getNext();
+        }
         return false;
     }
     /**
@@ -116,18 +123,15 @@ public class LList<E> implements IList<E>
      */
     public IList<E> subList(int startIndex, int endIndex) 
     {
+        LList<E> newList = new LList<>();
         Link<E> currentLink = start;
-        for(int j = 0; j <= startIndex-1; j++) {
+        for(int j = 0; j <= endIndex; j++) {
             //System.out.print(currentLink);
+            if (j >= startIndex && j<= endIndex){
+                newList.add(currentLink.getDatum());
+            }
             currentLink = currentLink.getNext();
         }
-        LList<E> newList = new LList<>(currentLink);
-        currentLink = newList.start;
-        for(int j = 0; j < endIndex-startIndex-1; j++) {
-            //System.out.print(currentLink);
-            currentLink = currentLink.getNext();
-        }
-        currentLink.getNext().setNext(null);
         return newList;
     }
     public Iterator<E> iterator()
