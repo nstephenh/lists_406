@@ -20,19 +20,7 @@ public class LList<E> implements IList<E>
             start = new Link<>(newItem, null);
             return;
         }
-        if (size()==1){
-            start.setNext(new Link<E>(newItem, null));
-            return;
-        }
-        if (size()==2){
-            start.getNext().setNext(new Link<E>(newItem, null));
-            return;
-        }
-        Link<E> useMe = start;
-        for(int i = 0; i < size()-2; i++){
-            useMe = useMe.getNext();
-        }
-        useMe.getNext().setNext(new Link<E>(newItem, null));
+        add(size(), newItem);
     }
     /**
      * @param k The index at which the new item is
@@ -42,7 +30,15 @@ public class LList<E> implements IList<E>
      */
     public void add(int k, E newItem)
     {
-
+        if (k==0) {
+            start = new Link<>(newItem, start);
+            return;
+        }
+        Link<E> useMe = start;
+        for(int i = 0; i < k-1; i++){
+            useMe = useMe.getNext();
+        }
+        useMe.setNext(new Link<E>(newItem, useMe.getNext()));
     }
     /**
      * @param k is the index
