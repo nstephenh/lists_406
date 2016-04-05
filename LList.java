@@ -9,6 +9,9 @@ public class LList<E> implements IList<E>
     {
         start = null;
     }
+    public LList(Link<E> startLink){
+        start = startLink;
+    }
     /**
      * @param newItem new item to be added to the end
      * of the list.
@@ -49,15 +52,11 @@ public class LList<E> implements IList<E>
     public E get(int k)
     {
         Link<E> currentLink = start;
-        for(int j = 0; j <= k; j++) {
+        for(int j = 0; j <= k-1; j++) {
             //System.out.print(currentLink);
-            try {
-                currentLink = currentLink.getNext();
-            }catch(NullPointerException done){
-                return currentLink.getDatum();
-            }
+            currentLink = currentLink.getNext();
         }
-        return null;
+        return currentLink.getDatum();
     }
     /**
      * This method sets the item at index k to have value newValue.
@@ -69,7 +68,14 @@ public class LList<E> implements IList<E>
      */
     public E set(int k, E newValue)
     {
-        return null;
+        Link<E> currentLink = start;
+        for(int j = 0; j <= k-1; j++) {
+            //System.out.print(currentLink);
+            currentLink = currentLink.getNext();
+        }
+        E oldValue = currentLink.getDatum();
+        currentLink.setDatum(newValue);
+        return oldValue;
     }
     /**
      * This rifles the list for the object <code>o</code>
@@ -110,11 +116,42 @@ public class LList<E> implements IList<E>
      */
     public IList<E> subList(int startIndex, int endIndex) 
     {
-        return null;
+        Link<E> currentLink = start;
+        for(int j = 0; j <= startIndex-1; j++) {
+            //System.out.print(currentLink);
+            currentLink = currentLink.getNext();
+        }
+        LList<E> newList = new LList<>(currentLink);
+        currentLink = newList.start;
+        for(int j = 0; j < endIndex-startIndex-1; j++) {
+            //System.out.print(currentLink);
+            currentLink = currentLink.getNext();
+        }
+        currentLink.getNext().setNext(null);
+        return newList;
     }
     public Iterator<E> iterator()
     {
-        return null;
+        return new Navigator();
+    }
+    @SuppressWarnings("unchecked")
+    class Navigator implements Iterator<E>
+    {
+        Link<E> loc;
+        public Navigator()
+        {
+            loc = start;
+        }
+        public boolean hasNext()
+        {
+            return loc != null;
+        }
+        public E next()
+        {
+            E out = loc.getDatum();
+            loc = loc.getNext();
+            return out;
+        }
     }
 
     public static void main(String[] args) {
@@ -124,12 +161,12 @@ public class LList<E> implements IList<E>
             theStack.add("" + k);
             System.out.print(k + " ");
         }
-        /*System.out.println(theStack.size());
+        System.out.println(theStack.size());
         System.out.println(theStack.size() == TEST ? "PASS" : "FAIL");
-        for (int k = 0; k < 2; k++) {
+        for (int k = 0; k < TEST; k++) {
             System.out.print(theStack.get(k) + " ");
-        }*/
-        /*System.out.println();
+        }
+        System.out.println();
         for (String s : theStack) {
             System.out.print(s + " ");
         }
@@ -150,7 +187,7 @@ public class LList<E> implements IList<E>
             System.out.print(s + " ");
         }
         System.out.println();
-        System.out.println(theStack.contains("19"));*/
+        System.out.println(theStack.contains("19"));
     }
 }
 //Link from LStack
@@ -171,12 +208,15 @@ class Link<T>
     {
         return datum;
     }
-    public void setNext(Link<T> nexte){
-        next = nexte;
+    public void setNext(Link<T> next){
+        this.next = next;
     }
     public Link<T> getNext()
     {
         return next;
+    }
+    public void setDatum(T datum){
+        this.datum = datum;
     }
     public String toSting(){
         return datum.toString() + " , " + next.toString();
